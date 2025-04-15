@@ -6,6 +6,9 @@ class FeatureNode:
         self.children = []
         self.movies = []
 
+    def __repr__(self):
+        return "Feature Node: " + str(self.name)
+
     def add_child(self, child):
         self.children.append(child)
 
