@@ -1,3 +1,6 @@
+#
+# Code made by Earl Hibbs
+#
 class User:
 
     def __init__(self, user_id: int, username: str, watched_movies: list[int] = None, liked_genres: list[str] = None, liked_tags: list[str] = None):
