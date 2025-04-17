@@ -1,3 +1,6 @@
+#
+# Code made by Nick Taweel
+# 
 class Tag:
     def __init__(self, name, description=None):
         self.name = name
