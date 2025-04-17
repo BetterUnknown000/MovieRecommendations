@@ -1,3 +1,6 @@
+#
+# Code made by Earl Hibbs
+#
 class Movie:
 
     # Basic constructor for our Movie class. This takes in the required attributes for a movie.
