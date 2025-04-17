@@ -1,3 +1,6 @@
+#
+# Code made by Ishaq Halimi
+#
 import pandas as pd
 from Movie import Movie  # For Movie.py class
 
@@ -28,7 +31,7 @@ class DatasetLoader:
                 movie = Movie(movie_id, title, genres, tags)
                 self.movie_objects.append(movie)
             except Exception as e:
-                print(f"⚠️ Skipped movie due to error: {e}")
+                print(f"Skipped movie due to error: {e}")
 
     def get_movie_by_title(self, title):
         for movie in self.movie_objects:
