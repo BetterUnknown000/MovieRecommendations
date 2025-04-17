@@ -1,5 +1,6 @@
 # basic idea of tree structure
-
+# Code made by Jack Demtshuk
+#
 class FeatureNode:
     def __init__(self, name):
         self.name = name
