@@ -23,7 +23,7 @@ class Recommender:
 
     def recommend_user(self, user: 'User'):
         matches = []
-        for movie in self.dataset.movies:
+        for movie in self.dataset.movie_objects:
             if movie.movie_id in user.watched_movies:
                 continue
             shared_genres = set(movie.genres).intersection(user.liked_genres)
