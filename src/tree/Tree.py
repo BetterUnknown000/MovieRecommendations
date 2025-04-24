@@ -17,7 +17,7 @@ class FeatureNode:
         self.movies.append(movie)
 
 
-# root node is based off what the current feature is (genre, director, amount of suicides idk)
+# root node is based off what the current feature is (genre, director)
 root = FeatureNode("Genre")
 
 #starting branches
