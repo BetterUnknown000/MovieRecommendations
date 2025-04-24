@@ -13,12 +13,12 @@ graph = MovieGraph()
 for movie in movies:
     graph.add_movie(movie)
 
-for movie1 in movies:
+'''for movie1 in movies:
     for movie2 in movies:
         if movie1 != movie2:
             shared_genres = set(movie1.genres).intersection(set(movie2.genres))
             if shared_genres:
-                graph.add_edge(movie1.movie_id, movie2.movie_id, weight=len(shared_genres))
+                graph.add_edge(movie1.movie_id, movie2.movie_id, weight=len(shared_genres))'''
 
 tree = GenreTree(root)
 
@@ -26,11 +26,16 @@ user = User(
     user_id=1,
     username="Test",
     watched_movies=[movies[0].movie_id],
-    liked_genres=["Action", "Comedy"],
-    liked_tags=["space", "AI"]
+    liked_genres=[],
+    liked_tags=[]
 )
 
+userinput = input("What is a genre you enjoy? ")
+user.like_genre(userinput)
+
 users = {1: user}
+
+print(user.get_profile())
 
 recommender = Recommender(graph, tree, loader, users)
 
