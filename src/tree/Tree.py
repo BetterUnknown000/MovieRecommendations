@@ -87,3 +87,8 @@ def find_parent(current, target, parent = None):
     return None
 
 print(recommend(root, "Star Wars"))
+
+{'Action', 'Adventure', 'Animation', 'Comedy', 'Crime', 'Documentary',
+ 'Drama', 'Family', 'Fantasy', 'Foreign', 'History', 'Horror', 'Music',
+ 'Mystery', 'Romance', 'Science Fiction', 'TV Movie', 'Thriller', 'War', 'Western'}
+
