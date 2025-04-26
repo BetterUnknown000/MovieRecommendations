@@ -1,4 +1,8 @@
 import streamlit as stream
+import os
+import signal
+import sys
+import time
 from models.User import User
 from models.UserManager import UserManager
 from recommend.Recommender import Recommender
@@ -15,10 +19,16 @@ if "mode" not in stream.session_state:
     stream.session_state.mode = None
 if "show_settings" not in stream.session_state:
     stream.session_state.show_settings = False
+if "shutdown" not in stream.session_state:
+    stream.session_state.shutdown = False
 
-# ================================
-# Caching Movies and Building Graph/Tree
-# ================================
+if stream.session_state.shutdown:
+    stream.title("Server Shut Down")
+    stream.write("Movie Recommendations App has been shut down.")
+    time.sleep(2)
+    os.kill(os.getpid(), signal.SIGTERM)
+    sys.exit(0)
+
 if "movies" not in stream.session_state:
     loader = DatasetLoader("../data/cleaned_movies.csv")
     movies = loader.load_dataset()
@@ -50,9 +60,6 @@ else:
 user_manager = UserManager()
 recommender = Recommender(graph, tree, movies, {})
 
-# ================================
-# Main UI
-# ================================
 stream.title("Movie Recommendation App")
 
 if not stream.session_state.logged_in:
@@ -190,3 +197,24 @@ else:
         stream.session_state.mode = None
         stream.session_state.show_settings = False
         stream.rerun()
+
+stream.markdown("---")
+stream.markdown("<br>", unsafe_allow_html=True)
+
+shutdown = stream.button("Shutdown Server", key="shutdown_server_button", type="primary")
+
+if shutdown:
+    stream.session_state.shutdown = True
+    stream.rerun()
+
+stream.markdown(
+    """
+    <style>
+    button[kind="primary"] {
+        background-color: red !important;
+        color: white !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
