@@ -3,9 +3,10 @@
 #
 class User:
 
-    def __init__(self, user_id: int, username: str, watched_movies: list[int] = None, liked_genres: list[str] = None, liked_tags: list[str] = None):
+    def __init__(self, user_id: int, username: str, password: str, watched_movies: list[int] = None, liked_genres: list[str] = None, liked_tags: list[str] = None):
         self.user_id = user_id # All users must have a valid ID. Everything else can be none if they don't want to be.
         self.username = username # Provide a username to the User class.
+        self.password = password
 
         if watched_movies is not None: # Sets watched movies if there are some provided. Makes it empty otherwise.
             self.watched_movies = watched_movies
@@ -43,6 +44,7 @@ class User:
         return {
             "User ID": self.user_id,
             "Username": self.username,
+            "Password": self.password,
             "Watched Movies": self.watched_movies,
             "Liked Genres": self.liked_genres,
             "Liked Tags": self.liked_tags

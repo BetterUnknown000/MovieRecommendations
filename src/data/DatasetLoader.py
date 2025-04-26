@@ -28,8 +28,6 @@ class DatasetLoader:
                 self.movie_objects.append(movie)
 
             print("Dataset Loaded!")
-            for movie in self.movie_objects[:3]:
-                print(movie.get_info())
             return self.movie_objects
 
         except Exception as e:
