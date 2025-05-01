@@ -62,6 +62,21 @@ recommender = Recommender(graph, tree, movies, {})
 
 stream.title("Movie Recommendation App")
 
+stream.markdown(
+    """
+    <style>
+    .stApp {
+        background-image: url("https://t4.ftcdn.net/jpg/00/92/82/47/360_F_92824780_60mM0MW8H3bdTfyPHaaavjyXtqDa1Asx.jpg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+
 if not stream.session_state.logged_in:
     if stream.session_state.mode is None:
         stream.header("Welcome to the Movie Recommender")
@@ -197,7 +212,7 @@ else:
                 stream.info(f"'{selected_movie.title}' is already in your watched list.")
 
         for movie, score in recommendations:
-            stream.write(f"{str(movie)} - Recommendation Score: {score}")
+            stream.write(f"{movie.title} - Recommendation Score: {score:.1f}")
 
         stream.subheader("Your Watched Movies:")
         for watched_id in user.watched_movies:
@@ -205,7 +220,8 @@ else:
                 next((m.title for m in movies if m.movie_id == watched_id), None)
             )
             if watched_movie:
-                stream.write(str(watched_movie))
+                stream.write(f"{watched_movie.title}")
+
 
         stream.subheader("Remove Movies from Watched List")
         if user.watched_movies:
