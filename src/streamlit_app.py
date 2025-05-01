@@ -88,23 +88,44 @@ if not stream.session_state.logged_in:
              "Music", "Family", "Sci-Fi", "Fantasy", "Foreign", "History", "Horror", "TV Movie", "Documentary", "War"]
         )
 
+        common_tags = [
+            "adultery", "aftercreditsstinger", "alien", "based on novel", "based on true story",
+            "biography", "blood", "brother brother relationship", "christmas", "college",
+            "coming of age", "corruption", "dark comedy", "daughter", "death", "detective",
+            "doctor", "dog", "drug", "duringcreditsstinger", "dystopia", "escape",
+            "extramarital affair", "family", "father son relationship", "female nudity",
+            "film noir", "france", "friends", "friendship", "gangster", "gay", "ghost",
+            "gore", "high school", "holiday", "homosexuality", "hospital", "independent film",
+            "infidelity", "investigation", "island", "japan", "jealousy", "kidnapping",
+            "lawyer", "lgbt", "london england", "los angeles", "love", "magic", "male nudity",
+            "marriage", "martial arts", "money", "monster", "murder", "music", "musical",
+            "nazis", "new york", "nudity", "paris", "party", "police", "prison", "prostitute",
+            "rape", "remake", "revenge", "robbery", "romance", "scientist", "sequel",
+            "serial killer", "sex", "short", "silent film", "slasher", "small town", "sport",
+            "spy", "stand-up comedy", "student", "suicide", "superhero", "supernatural",
+            "suspense", "teacher", "teenager", "torture", "vampire", "violence", "war",
+            "wedding", "wife husband relationship", "woman director", "world war ii", "zombie"
+        ]
+
         liked_tags = stream.multiselect(
-            "Pick the tags you like (optional):",
-            []
+            "Pick the tags you like: (OPTIONAL)",
+            common_tags
         )
 
         if stream.button("Submit New User", key="create_user_submit"):
-            if username and password:
+            if not username or not password:
+                stream.error("Please enter both a username and password.")
+            elif not liked_genres:
+                stream.error("Please select at least one genre.")
+            else:
                 existing_usernames = [info['username'] for info in user_manager.users.values()]
                 if username in existing_usernames:
-                    stream.error("Username already taken. Please choose a different username.")
+                    stream.error("Username already taken. Try another Username.")
                 else:
                     user_id = user_manager.add_user(username, password, liked_genres, liked_tags)
                     stream.success("Account created successfully. Please log in.")
                     stream.session_state.mode = "login"
                     stream.rerun()
-            else:
-                stream.error("Please enter both a username and password.")
 
     if stream.session_state.mode == "login":
         if user_manager.users:
@@ -161,8 +182,53 @@ else:
         recommendations = recommender.recommend_user(user)
 
         stream.subheader("Your Top 20 Movie Recommendations:")
-        for movie in recommendations:
-            stream.write(str(movie))
+        movie_map = {f"{movie.title} (Score: {score:.1f})": movie for movie, score in recommendations}
+        selected_watched = stream.selectbox("Select a movie you’ve watched:", list(movie_map.keys()))
+
+        if stream.button("Add Selected Movie to Watched List"):
+            selected_movie = movie_map[selected_watched]
+            if selected_movie.movie_id not in user.watched_movies:
+                user.watched_movies.append(selected_movie.movie_id)
+                user_manager.users[str(user.user_id)]["watched_movies"] = user.watched_movies
+                user_manager.save_users()
+                stream.success(f"Added '{selected_movie.title}' to your watched movies.")
+                stream.rerun()
+            else:
+                stream.info(f"'{selected_movie.title}' is already in your watched list.")
+
+        for movie, score in recommendations:
+            stream.write(f"{str(movie)} - Recommendation Score: {score}")
+
+        stream.subheader("Your Watched Movies:")
+        for watched_id in user.watched_movies:
+            watched_movie = loader.get_movie_by_title(
+                next((m.title for m in movies if m.movie_id == watched_id), None)
+            )
+            if watched_movie:
+                stream.write(str(watched_movie))
+
+        stream.subheader("Remove Movies from Watched List")
+        if user.watched_movies:
+            watched_titles = []
+            for watched_id in user.watched_movies:
+                watched_movie = loader.get_movie_by_id(watched_id)
+                if watched_movie:
+                    watched_titles.append(f"{watched_movie.title} (ID: {watched_id})")
+
+            movies_to_remove = stream.multiselect("Select movies to remove:", watched_titles)
+
+            if stream.button("Remove Selected Movies"):
+                for title_str in movies_to_remove:
+                    movie_id = int(title_str.split("ID: ")[1][:-1])
+                    if movie_id in user.watched_movies:
+                        user.watched_movies.remove(movie_id)
+
+                user_manager.users[str(user.user_id)]["watched_movies"] = user.watched_movies
+                user_manager.save_users()
+                stream.success("Selected movies removed from watched list.")
+                stream.rerun()
+        else:
+            stream.write("No movies in your watched list.")
 
         if stream.button("Settings", key="open_settings"):
             stream.session_state.show_settings = not stream.session_state.show_settings

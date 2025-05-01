@@ -20,9 +20,49 @@ class DatasetLoader:
                 if isinstance(row.genres, str):
                     genres = [g.strip() for g in row.genres.split(",")]
 
+                tag_map = {
+                    "new york": "new york city",
+                    "female nudity": "nudity",
+                    "male nudity": "nudity",
+                    "gay": "lgbtq",
+                    "homosexuality": "lgbtq",
+                    "brother brother relationship": "family",
+                    "wife husband relationship": "marriage",
+                    "music": "musical",
+                    "france": "paris"
+                }
+
+                allowed_tags = [
+                    "adultery", "aftercreditsstinger", "alien", "based on novel", "based on true story", "biography",
+                    "blood",
+                    "family", "christmas", "college", "coming of age", "corruption", "dark comedy", "daughter", "death",
+                    "detective", "doctor", "dog", "drug", "duringcreditsstinger", "dystopia", "escape",
+                    "extramarital affair",
+                    "father son relationship", "film noir", "friends", "friendship", "gangster", "ghost", "gore",
+                    "high school",
+                    "holiday", "hospital", "independent film", "infidelity", "investigation", "island", "japan",
+                    "jealousy",
+                    "kidnapping", "lawyer", "lgbt", "london england", "los angeles", "love", "magic", "nudity",
+                    "marriage",
+                    "martial arts", "money", "monster", "murder", "musical", "nazis", "new york city", "paris", "party",
+                    "police", "prison", "prostitute", "rape", "remake", "revenge", "robbery", "romance", "scientist",
+                    "sequel",
+                    "serial killer", "sex", "short", "silent film", "slasher", "small town", "sport", "spy",
+                    "stand-up comedy",
+                    "student", "suicide", "superhero", "supernatural", "suspense", "teacher", "teenager", "torture",
+                    "vampire",
+                    "violence", "war", "wedding", "woman director", "world war ii", "zombie"
+                ]
+
                 tags = []
                 if isinstance(row.tags, str):
-                    tags = [t.strip() for t in row.tags.split(",")]
+                    raw_tags = [t.strip().lower() for t in row.tags.split(",")]
+                    cleaned_tags = []
+                    for tag in raw_tags:
+                        tag = tag_map.get(tag, tag)
+                        if tag in allowed_tags:
+                            cleaned_tags.append(tag)
+                    tags = list(set(cleaned_tags))
 
                 movie = Movie(movie_id=i, title=title, genres=genres, tags=tags)
                 self.movie_objects.append(movie)
@@ -50,5 +90,11 @@ class DatasetLoader:
     def get_movie_by_title(self, title):
         for movie in self.movie_objects:
             if movie.title.lower() == title.lower():
+                return movie
+        return None
+
+    def get_movie_by_id(self, movie_id):
+        for movie in self.movie_objects:
+            if movie.movie_id == movie_id:
                 return movie
         return None

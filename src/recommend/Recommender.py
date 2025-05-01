@@ -22,7 +22,7 @@ class Recommender:
             return []
 
     def recommend_user(self, user):
-        matches = []
+        matches = {}
 
         for movie in self.movies:
             if movie.movie_id in user.watched_movies:
@@ -40,11 +40,22 @@ class Recommender:
                     elif distance == 2:
                         total_score += 1
 
-            if set(movie.tags).intersection(user.liked_tags):
-                total_score += 1
+            tag_matches = set(movie.tags).intersection(user.liked_tags) if user.liked_tags else set()
+            total_score += 1 * len(tag_matches)
 
-            matches.append((movie, total_score))  # FIXED: add movie, not user
+            for watched_id in user.watched_movies:
+                neighbors = self.graph.get_neighbors(watched_id)
+                for neighbor_id, weight in neighbors:
+                    if neighbor_id == movie.movie_id:
+                        total_score += weight
 
-        matches.sort(key=lambda x: x[1], reverse=True)
-        top_movies = [movie for movie, score in matches[:20]]  # Now it works
+            if total_score > 0:
+                matches[movie] = total_score
+
+        sorted_movies = sorted(matches.items(), key=lambda x: x[1], reverse=True)
+        top_movies = sorted_movies[:20]
+
+        for movie, score in top_movies:
+            print(str(movie) + " - Score: " + str(score))
+
         return top_movies
