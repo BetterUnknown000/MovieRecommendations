@@ -30,7 +30,7 @@ if stream.session_state.shutdown:
     sys.exit(0)
 
 if "movies" not in stream.session_state:
-    loader = DatasetLoader("../data/cleaned_movies.csv")
+    loader = DatasetLoader("../data/final_movies.csv")
     movies = loader.load_dataset()
     movies = movies[:200]
     stream.session_state.loader = loader
@@ -104,22 +104,13 @@ if not stream.session_state.logged_in:
         )
 
         common_tags = [
-            "adultery", "aftercreditsstinger", "alien", "based on novel", "based on true story",
-            "biography", "blood", "brother brother relationship", "christmas", "college",
-            "coming of age", "corruption", "dark comedy", "daughter", "death", "detective",
-            "doctor", "dog", "drug", "duringcreditsstinger", "dystopia", "escape",
-            "extramarital affair", "family", "father son relationship", "female nudity",
-            "film noir", "france", "friends", "friendship", "gangster", "gay", "ghost",
-            "gore", "high school", "holiday", "homosexuality", "hospital", "independent film",
-            "infidelity", "investigation", "island", "japan", "jealousy", "kidnapping",
-            "lawyer", "lgbt", "london england", "los angeles", "love", "magic", "male nudity",
-            "marriage", "martial arts", "money", "monster", "murder", "music", "musical",
-            "nazis", "new york", "nudity", "paris", "party", "police", "prison", "prostitute",
-            "rape", "remake", "revenge", "robbery", "romance", "scientist", "sequel",
-            "serial killer", "sex", "short", "silent film", "slasher", "small town", "sport",
-            "spy", "stand-up comedy", "student", "suicide", "superhero", "supernatural",
-            "suspense", "teacher", "teenager", "torture", "vampire", "violence", "war",
-            "wedding", "wife husband relationship", "woman director", "world war ii", "zombie"
+
+    "Horror", "Child", "Toy", "Animal", "Emotion", "Friendship", "Family", "Relationship",
+    "School", "Addiction", "Adaptation", "Crime", "Law Enforcement", "Violence", "Exciting",
+    "Wealth", "Gambling", "Hotel", "USA", "France", "Russia", "Science", "Apocalypse",
+    "Political", "Tropical", "Death", "Musical", "Scary"
+
+
         ]
 
         liked_tags = stream.multiselect(

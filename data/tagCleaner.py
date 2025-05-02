@@ -23,7 +23,6 @@ def bulk_replace_tags(file_path, replacements_dict, output_file):
         final_tags = [tag for tag in updated_tags if tag and tag[0].isupper()]
         return ', '.join(final_tags)
 
-
     # Apply the replacement function
     df['tags'] = df['tags'].apply(replace_tags)
 
