@@ -274,12 +274,6 @@ else:
 stream.markdown("---")
 stream.markdown("<br>", unsafe_allow_html=True)
 
-shutdown = stream.button("Shutdown Server", key="shutdown_server_button", type="primary")
-
-if shutdown:
-    stream.session_state.shutdown = True
-    stream.rerun()
-
 stream.markdown(
     """
     <style>
