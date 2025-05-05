@@ -30,7 +30,8 @@ if stream.session_state.shutdown:
     sys.exit(0)
 
 if "movies" not in stream.session_state:
-    loader = DatasetLoader("../data/final_movies.csv")
+    dataset_path = os.path.join(os.path.dirname(__file__), "../data/cleaned_movies.csv")
+    loader = DatasetLoader(dataset_path)
     movies = loader.load_dataset()
     movies = movies[:200]
     stream.session_state.loader = loader
