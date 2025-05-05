@@ -7,8 +7,7 @@ from models.Movie import Movie # For Movie.py class
 
 class DatasetLoader:
     def __init__(self, path):
-        base_dir = os.path.dirname(__file__)
-        self.path = os.path.abspath(os.path.join(base_dir, path))
+        self.path = os.path.join(os.getcwd(), path)
         self.movie_objects = []
 
     def load_dataset(self):
