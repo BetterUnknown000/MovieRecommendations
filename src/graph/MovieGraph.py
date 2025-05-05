@@ -26,21 +26,28 @@ class MovieGraph:
             print(movie_title + " --> " + str(connections))
 
     def build_edges(self):
-        movie_ids = list(self.movies.keys())
-        for i in range(len(movie_ids) - 1):
-            for j in range(i + 1, len(movie_ids)):
-                id1 = movie_ids[i]
-                id2 = movie_ids[j]
-                tags1 = set(self.movies[id1].tags)
-                tags2 = set(self.movies[id2].tags)
-
-                shared_tags = 0
-
-                for tag in tags1:
-                    if tag in tags2:
-                        shared_tags += 1
-                        if shared_tags == 3:
+        from collections import defaultdict
+        tag_to_movies = defaultdict(set)
+        MAX_MOVIES_PER_TAG = 200
+        MAX_NEIGHBORS_PER_MOVIE = 50
+        for movie in self.movies.values():
+            for tag in movie.tags:
+                tag_to_movies[tag].add(movie.movie_id)
+        for tag in list(tag_to_movies.keys()):
+            if len(tag_to_movies[tag]) > MAX_MOVIES_PER_TAG:
+                tag_to_movies[tag] = set()
+        for movie_id, movie in self.movies.items():
+            connected_ids = set()
+            for tag in movie.tags:
+                for neighbor_id in tag_to_movies[tag]:
+                    if neighbor_id == movie_id or neighbor_id in connected_ids:
+                        continue
+                    shared_tags = set(movie.tags).intersection(self.movies[neighbor_id].tags)
+                    if shared_tags:
+                        weight = len(shared_tags)
+                        if len(self.edges[movie_id]) >= MAX_NEIGHBORS_PER_MOVIE:
                             break
-
-                if shared_tags > 0:
-                    self.add_edge(id1, id2, shared_tags)
+                        if len(self.edges[neighbor_id]) >= MAX_NEIGHBORS_PER_MOVIE:
+                            continue
+                        self.add_edge(movie_id, neighbor_id, weight)
+                        connected_ids.add(neighbor_id)

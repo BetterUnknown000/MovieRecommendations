@@ -41,13 +41,7 @@ if "movies" not in stream.session_state:
     for movie in movies:
         graph.add_movie(movie)
 
-    for i in range(len(movies)):
-        for j in range(i + 1, len(movies)):
-            movie1 = movies[i]
-            movie2 = movies[j]
-            shared_genres = set(movie1.genres).intersection(set(movie2.genres))
-            if shared_genres:
-                graph.add_edge(movie1.movie_id, movie2.movie_id, weight=len(shared_genres))
+    graph.build_edges()
 
     tree = GenreTree(root)
     stream.session_state.graph = graph
