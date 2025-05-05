@@ -33,7 +33,7 @@ if "movies" not in stream.session_state:
     dataset_path = os.path.join(os.path.dirname(__file__), "../data/cleaned_movies.csv")
     loader = DatasetLoader(dataset_path)
     movies = loader.load_dataset()
-    movies = movies[:]
+    movies = movies[:2000]
     stream.session_state.loader = loader
     stream.session_state.movies = movies
 
