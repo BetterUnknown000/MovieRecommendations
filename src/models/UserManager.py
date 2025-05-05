@@ -10,6 +10,10 @@ class UserManager:
         self.users = self.load_users()
 
     def load_users(self):
+        path = os.path.dirname(self.path)
+        if not os.path.exists(path):
+            os.makedirs(path)
+
         if not os.path.exists(self.path):
             with open(self.path, "w") as f:
                 json.dump({}, f)
