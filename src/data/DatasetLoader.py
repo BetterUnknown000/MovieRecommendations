@@ -2,11 +2,13 @@
 # Code made by Ishaq Halimi
 #
 import pandas as pd
+import os
 from models.Movie import Movie # For Movie.py class
 
 class DatasetLoader:
     def __init__(self, path):
-        self.path = path
+        base_dir = os.path.dirname(__file__)
+        self.path = os.path.abspath(os.path.join(base_dir, path))
         self.movie_objects = []
 
     def load_dataset(self):
